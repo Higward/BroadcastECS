@@ -7,6 +7,7 @@ local hex = require "main.utils.hexagon"
 local layout = require "main.utils.layout"
 
 function t1()
+	local mid = hex.new(0, 0, 0)
 	local a = hex.new(-1,0,1)
 	local samefirst = hex.new(-1,0,1)
 	local b = hex.new(3,0,-3)
@@ -18,6 +19,21 @@ function t1()
 	assert(hex.equal(hex.new(0, -1, 1), hex.neighbor(a, 2)))
 	assert(1 == hex.length(a))
 	assert(4 == hex.distance(a, b))
+
+	local r = {hex.new(0, -1, 1)}
+	for i = 1, 5 do
+		table.insert(r, hex.rotate_left(r[i]))
+	end
+	table.insert(r, mid)
+	
+	local r2 = hex.range(mid, 1)
+	-- for _,k in pairs(r2) do 
+	-- 	pprint(string.format("--[%d, %d, %d]", k.q, k.r, k.s))
+	-- end
+	local r3 = hex.intersecting_range(a, b, 1)
+	assert(hex.equal(r3, {}))
+	local r4 = hex.intersecting_range(mid, mid, 1)
+	assert(hex.equal(r4, r2))
 end
 
 function t2()

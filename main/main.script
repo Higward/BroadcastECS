@@ -4,23 +4,30 @@ local layout = require "main.utils.layout"
 local test = require "main.tests.util_test"
 
 function init(self)
-	-- msg.post(".", "acquire_input_focus")
-	-- msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
-	-- local second = hex:new({-2,0,2})
-	-- print(("%b"):format(tostring(hex.equals(first, second))))
+	msg.post(".", "acquire_input_focus")
+	msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+	create()
 end
 
 function update(self, dt)
-	-- if self.states.is_active("1") then
-	-- 	print("State 1 is active")
-	-- else
-	-- 	print("No active state")
-	-- end
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("click") and action.pressed then
 		print("Click!")
 		-- self.states.handle_event("1","1")
+	end
+end
+
+function create()
+	local l = layout.hex_layout_new(layout_flat, layout.point(84, 84), layout.point(0, 0))
+	local component = "/go#factory"
+	local hexes = {}
+	for _, i in pairs(hex.range(hex.new(0, 0, 0), 3)) do
+		local props = {q = i.q, r = i.r, s = i.s}
+		local pos = layout.hex_to_pixel(l, i)
+		local p = vmath.vector3(pos.x,pos.y,0)
+		local id = factory.create(component, p, nil ,props)
+		table.insert(hexes, id)
 	end
 end

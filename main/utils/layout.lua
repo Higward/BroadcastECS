@@ -28,6 +28,8 @@ function M.hex_layout_new(orientation, size, origin)
 	return {orientation = orientation, size = Point(size.x, size.y), origin = Point(origin.x, origin.y)}
 end
 
+
+
 -- @layout : 
 -- @h : Hex
 function M.hex_to_pixel(layout, h)

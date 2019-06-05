@@ -74,6 +74,19 @@ function M.lerp(a, b, t)
 	return M.new(a.q * (1.0 - t) + b.q * t, a.r * (1.0 - t) + b.r * t, a.s * (1.0 - t) + b.s * t)
 end
 
+function M.rotate_left(a)
+	return M.new(-a.s, -a.q, -a.r)
+end
+
+function M.equal_array(a,b)
+	for i = 0, #a - 1 do
+		if M.equal(a[1+i], b[1+i]) == false then
+			return false
+		end
+	end
+	return true
+end
+
 function M.linedraw (a, b)
 	local N = M.distance(a, b)
 	local a_nudge = M.new(a.q + 0.000001, a.r + 0.000001, a.s - 0.000002)
@@ -82,6 +95,35 @@ function M.linedraw (a, b)
 	local step = 1.0 / math.max(N, 1)
 	for i = 0, N do
 		table.insert(results, M.round(M.lerp(a_nudge, b_nudge, step * i)))
+	end
+	return results
+end
+
+function M.range(a, r)
+	local results = {}
+	for i = -r,r do
+		for j = math.max(-r, -i - r), math.min(r, -i + r) do
+			local s = -i-j
+			table.insert(results, M.add(a, M.new(i, j, s)))
+		end
+	end
+	return results
+end
+
+function M.intersecting_range(a, b, r)
+	local results = {}
+	local q_min = math.max(a.q - r, b.q - r)
+	local q_max = math.min(a.q + r, b.q + r)
+	local r_min = math.max(a.r - r, b.r - r)
+	local r_max = math.min(a.r + r, b.r + r)
+	local s_min = math.max(a.s - r, b.s - r)
+	local s_max = math.min(a.s + r, b.s + r)
+	
+	for i = q_min,q_max do
+		for j = math.max(r_min, -i - s_max),math.min(r_max, -i - s_min) do
+			local s = -i-j
+			table.insert(results, M.new(i, j, s))
+		end
 	end
 	return results
 end
