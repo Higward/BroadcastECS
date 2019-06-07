@@ -1,33 +1,52 @@
 
 local hex = require "main.utils.hexagon"
 local layout = require "main.utils.layout"
-local test = require "main.tests.util_test"
+--local test = require "main.tests.util_test"
+local sp = {}
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
-	create()
+	sp = create()
 end
 
 function update(self, dt)
+	
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("click") and action.pressed then
 		print("Click!")
-		-- self.states.handle_event("1","1")
+		local mouse = {x=action.x, y=action.y}
+		local h = layout.pixel_to_hex(l, {x=mouse.x, y=mouse.y})
+		for _, i in pairs(sp) do
+			local url = msg.url(nil, i , "hex")
+			local qrs = {q = go.get(url, "q"), r = go.get(url, "r"), s = go.get(url, "s")}
+			pprint(qrs)
+			pprint(h)
+			if (qrs.q == h.q and qrs.r==h.r and qrs.s==h.s) then
+
+				go.delete(i)
+			end
+		end
 	end
 end
 
-function create()
-	local l = layout.hex_layout_new(layout_flat, layout.point(84, 84), layout.point(0, 0))
-	local component = "/go#factory"
-	local hexes = {}
-	for _, i in pairs(hex.range(hex.new(0, 0, 0), 3)) do
-		local props = {q = i.q, r = i.r, s = i.s}
-		local pos = layout.hex_to_pixel(l, i)
-		local p = vmath.vector3(pos.x,pos.y,0)
-		local id = factory.create(component, p, nil ,props)
-		table.insert(hexes, id)
+function size(s)
+	local result = {}
+	for i = -s,s do
+		for j = -s,s do 
+			table.insert(result, {col=j, row =i})
+		end
 	end
+	return result
+end
+
+function create()
+	l = layout.hex_layout_new(layout_pointy, layout.point(84, 84), layout.point(400, 400))
+	local component = "/go#factory"
+	local data2 = {{col=1, row=0}, {col=0, row=0}}
+	local data = size(2)
+	local sp = layout.create(l, component, data)
+	return sp
 end

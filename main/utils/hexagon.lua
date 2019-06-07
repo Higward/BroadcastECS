@@ -128,4 +128,26 @@ function M.intersecting_range(a, b, r)
 	return results
 end
 
+function M.ring(h, r)
+	local results = {}
+	local hex = M.add(h, M.scale(directions[5], r))
+	for i = 1, 6 do 
+		for j = 0, r-1 do
+			table.insert(results, hex)
+			hex = M.neighbor(hex, i)
+		end
+	end
+	return results
+end
+
+function M.spiral(h, r)
+	local results = {h}
+	for k = 1, r do
+		for _, j in pairs(M.ring(h, k)) do
+			table.insert(results, j)
+		end
+	end
+	return results
+end
+
 return M
