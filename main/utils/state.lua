@@ -42,7 +42,7 @@ end
 local instance = M.create()
 
 function M.on_start(data)
-	return instance.on_stop(data)
+	return instance.on_start(data)
 end
 
 function M.on_stop(data)
@@ -66,5 +66,5 @@ function M.update(data, action)
 end
 
 function M.is_active(action)
-	return instance.update(action)
+	return instance.is_active(action)
 end

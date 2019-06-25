@@ -97,5 +97,4 @@ function M.hex_corners (layout, h)
 	return corners
 end
 
-
 return M

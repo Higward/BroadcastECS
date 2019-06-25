@@ -19,14 +19,12 @@ function on_input(self, action_id, action)
 		print("Click!")
 		local mouse = {x=action.x, y=action.y}
 		local h = layout.pixel_to_hex(l, {x=mouse.x, y=mouse.y})
-		for _, i in pairs(sp) do
+		for id, i in pairs(sp) do
 			local url = msg.url(nil, i , "hex")
 			local qrs = {q = go.get(url, "q"), r = go.get(url, "r"), s = go.get(url, "s")}
-			pprint(qrs)
-			pprint(h)
 			if (qrs.q == h.q and qrs.r==h.r and qrs.s==h.s) then
-
 				go.delete(i)
+				table.remove(sp, id)
 			end
 		end
 	end
